@@ -92,10 +92,15 @@ app.controller('MainCtrl', [
         notificationTimeout = setTimeout(function () {
           notificationTimeout = null
         }, 2000)
-        new window.Notification('MailDev', { body: newEmail.subject, icon: 'favicon.ico' })
-          .addEventListener('click', function () {
-            $location.path('/email/' + newEmail.id)
+        new window.Notification(newEmail.subject, {
+          body: `MailDev to: ${newEmail.envelope.to.map(x => x.address).join(", ")} from: ${newEmail.envelope.from.address}`,
+          icon: 'favicon.ico',
+        })
+        .addEventListener('click', function (e) {
+          $location.path('/email/' + newEmail.id)
             $scope.$apply()
+            window.focus()
+            e.target.close()
           })
       }
     })
